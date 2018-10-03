@@ -91,7 +91,7 @@ class Player {
         }
     }
     changeSprite(charName) {
-        this.sprite = "'images/" + charName + ".png'";
+        this.sprite = "images/" + charName + ".png";
         console.log(this.sprite);
     }
     render() {
