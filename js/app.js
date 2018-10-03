@@ -58,8 +58,8 @@ class Enemy {
 // a handleInput() method.
 class Player {
     constructor(x, y) {
-        this.x = 200;
-        this.y = 410;
+        this.x = x;
+        this.y = y;
         this.height = 30;
         this.width = 67;
         this.sprite = 'images/char-boy.png';
@@ -72,7 +72,7 @@ class Player {
             score += 1;
             document.getElementById('level').innerHTML = "SCORE: " + score;
 
-            document.getElementById('level').addClass('animatedbounce');
+            // document.getElementById('level').addClass('animatedbounce');
 
         }
     }
@@ -90,9 +90,14 @@ class Player {
             this.x += 100;
         }
     }
+    changeSprite(charName) {
+        this.sprite = "'images/" + charName + ".png'";
+        console.log(this.sprite);
+    }
     render() {
         ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
     }
+
 }
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
@@ -104,7 +109,7 @@ allEnemies.push(enemy);
 allEnemies.push(enemy2);
 allEnemies.push(enemy3);
 // Place the player object in a variable called player
-var player = new Player();
+var player = new Player(200, 410);
 
 function resetGame() {
     console.log("reset game");
@@ -128,3 +133,18 @@ document.addEventListener('keyup', function(e) {
 
     player.handleInput(allowedKeys[e.keyCode]);
 });
+//Handle character selection
+//var characters = document.getElementsByClassName("characters");
+//for (let i = 0; i < characters.length; i++) {
+//    //  characters[i].addEventListener('click',chooseChar);
+//}
+
+function chooseChar(img) {
+    let charName = img.id;
+    charName.toString();
+    player.changeSprite(charName);
+    // Get the modal
+    var modal = document.getElementById('myModal');
+    modal.style.display = "none";
+
+}

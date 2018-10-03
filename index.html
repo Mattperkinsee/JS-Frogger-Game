@@ -9,28 +9,45 @@
 </head>
 
 <body>
-  <section class="title"></section>
-   
+    <section class="title"></section>
+
     <section class="scoreboard">
-      
+
         <div id="lives">
-         <ul>
-            <img id="life1" class="visible" src="images/Heart.png">
-            <img id="life2" class="visible" src="images/Heart.png">
-            <img id="life3" class="visible" src="images/Heart.png">
+            <ul>
+                <img id="life1" class="visible" src="images/Heart.png">
+                <img id="life2" class="visible" src="images/Heart.png">
+                <img id="life3" class="visible" src="images/Heart.png">
             </ul>
         </div>
-          <div id="level">SCORE: </div>
+        <div id="level">SCORE: </div>
     </section>
 
-    
+    <!-- The Modal -->
+    <div id="myModal" class="modal">
+
+        <!-- Modal content -->
+        <div class="modal-content">
+            
+            <p id="chooseChar">Choose a Character</p>
+            <div class="characters">
+                <img onclick="chooseChar(this)" id="char-boy" src="images/char-boy.png">
+                <img onclick="chooseChar(this)" id="char-cat-girl" src="images/char-cat-girl.png">
+                <img onclick="chooseChar(this)" id="char-horn-girl" src="images/char-horn-girl.png">
+                <img onclick="chooseChar(this)" id="char-pink-girl" src="images/char-pink-girl.png">
+                <img onclick="chooseChar(this)" id="char-princess-girl" src="images/char-princess-girl.png">
+            </div>
+        </div>
+
+
+    </div>
     <script src="js/resources.js"></script>
     <script src="js/app.js"></script>
     <script src="js/engine.js"></script>
     <script src="js/jquery-3.3.1.min.js"></script>
-    
+
     <section class="bottom-border">
-        
+
     </section>
 </body>
 
