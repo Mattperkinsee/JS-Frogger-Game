@@ -1,4 +1,8 @@
 var score = 0;
+const bounce = ["animated", "rubberBand"];
+const tada = ["animated", "tada"];
+const flash = ["animated", "flash"];
+var lives = 3;
 document.getElementById('level').append(score);
 // Enemies our player must avoid
 class Enemy {
@@ -25,23 +29,65 @@ class Enemy {
             if (this.x > 500) {
                 this.x = -100;
             }
-
+            if (lives <= 0) {
+                resetGame();
+            }
             //collisions with player, remove hearts, reset player pos
             if (this.x < player.x + player.width && this.x + this.width > player.x &&
                 this.y < player.y + player.height && this.y + this.height > player.y) {
-
                 player.x = 200;
                 player.y = 410;
+                lives--;
 
-                if (document.getElementById('life3').className == 'visible') {
-                    document.getElementById('life3').classList.remove('visible');
-                    document.getElementById('life3').classList.add('hidden');
-                } else if (document.getElementById('life2').className == 'visible') {
-                    document.getElementById('life2').classList.remove('visible');
-                    document.getElementById('life2').classList.add('hidden');
-                } else {
-                    resetGame();
+
+                let life3 = document.getElementById('life3');
+                let life2 = document.getElementById('life2');
+                let life1 = document.getElementById('life1');
+
+                if (life3.className == 'visible') {
+                    life3.classList.add(...bounce);
+                    setTimeout(delay, 300)
+
+                    function delay() {
+                        life3.classList.remove(...bounce);
+                        life3.classList.remove('visible');
+                        life3.classList.add('hidden');
+                    }
+
+
+                } else if (life2.className == 'visible') {
+                    life2.classList.add(...bounce);
+                    setTimeout(delay, 300)
+
+                    function delay() {
+                        life2.classList.remove(...bounce);
+                        life2.classList.remove('visible');
+                        life2.classList.add('hidden');
+                        flashHeart();
+                    }
+
+                    function flashHeart() {
+                        if(lives > 0) {
+                            life1.classList.remove('visible');
+                            life1.classList.add('hidden');
+                            setTimeout(repeat, 500)
+
+                            function repeat() {
+                                life1.classList.remove('hidden');
+                                life1.classList.add('visible');
+
+                                //setTimeout(flashHeart, 500);
+
+                            }
+                        }
+                    }
+
                 }
+
+
+
+
+
 
             }
         }
@@ -69,10 +115,15 @@ class Player {
         if (this.y <= 0) {
             this.y = 410;
             this.x = 200;
-            score += 1;
-            document.getElementById('level').innerHTML = "SCORE: " + score;
+            score += 10;
+            document.getElementById('level').innerHTML = score;
+            //score animation
+            document.getElementById('level').classList.add(...tada);
+            setTimeout(delay, 1000)
 
-            // document.getElementById('level').addClass('animatedbounce');
+            function delay() {
+                document.getElementById('level').classList.remove(...tada);
+            }
 
         }
     }
@@ -114,7 +165,8 @@ var player = new Player(200, 410);
 function resetGame() {
     console.log("reset game");
     score = 0;
-    document.getElementById('level').innerHTML = "SCORE: " + score;
+    lives = 3;
+    document.getElementById('level').innerHTML = score;
     document.getElementById('life3').classList.add('visible');
     document.getElementById('life3').classList.remove('hidden');
     document.getElementById('life2').classList.add('visible');
@@ -123,6 +175,13 @@ function resetGame() {
 
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.
+//Prevent arrows scrolling screen
+window.addEventListener("keydown", function(e) {
+    // space and arrow keys
+    if([32, 37, 38, 39, 40].indexOf(e.keyCode) > -1) {
+        e.preventDefault();
+    }
+}, false);
 document.addEventListener('keyup', function(e) {
     var allowedKeys = {
         37: 'left',
@@ -134,11 +193,6 @@ document.addEventListener('keyup', function(e) {
     player.handleInput(allowedKeys[e.keyCode]);
 });
 //Handle character selection
-//var characters = document.getElementsByClassName("characters");
-//for (let i = 0; i < characters.length; i++) {
-//    //  characters[i].addEventListener('click',chooseChar);
-//}
-
 function chooseChar(img) {
     let charName = img.id;
     charName.toString();
@@ -146,5 +200,74 @@ function chooseChar(img) {
     // Get the modal
     var modal = document.getElementById('myModal');
     modal.style.display = "none";
+    star.displayStar();
+}
+
+class Star {
+    constructor(x, y) {
+        this.x = x;
+        this.y = y;
+        this.height = 30;
+        this.width = 67;
+        this.sprite = 'images/Star.png';
+    }
+    update(dt) {
+        //collisions with player
+        if (this.x < player.x + player.width && this.x + this.width > player.x &&
+            this.y < player.y + player.height && this.y + this.height > player.y - 2) {
+            score += 50;
+            document.getElementById('level').innerHTML = score;
+            this.x = -100;
+            //score animation
+            document.getElementById('level').classList.add(...tada);
+            setTimeout(delay, 1000)
+
+            function delay() {
+                document.getElementById('level').classList.remove(...tada);
+            }
+
+        }
+
+    }
+
+    render() {
+        ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+
+    }
+
+    displayStar() {
+        let maxTime = 3500;
+        let minTime = 3500;
+        var myVar = setInterval(myTimer, Math.floor(Math.random() * (maxTime - minTime + 1)) + minTime)
+
+        function myTimer() {
+            var offsetX = 2;
+            var offsetY;
+            let maxX = 5;
+            let minX = 0;
+            let maxY = 3;
+            let minY = 1;
+            let randomX = Math.floor(Math.random() * Math.floor(maxX));
+            randomX = randomX * 100 + offsetX;
+            let randomY = Math.floor(Math.random() * Math.floor(maxY));
+            console.log(randomY);
+            //offsets gem on top row 
+            if (randomY === 0) {
+                offsetY = -50;
+            } else {
+                offsetY = -70;
+            }
+            randomY = randomY * 100 + 100 + offsetY;
+            console.log(randomX + ',' + randomY);
+
+
+            star.x = randomX;
+            star.y = randomY;
+
+        }
+    }
+
 
 }
+//instantiate first star object offscreen
+var star = new Star(-100, 0);
