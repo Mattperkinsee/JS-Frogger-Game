@@ -3,8 +3,9 @@ const bounce = ["animated", "rubberBand"];
 const tada = ["animated", "tada"];
 const flash = ["animated", "flash"];
 var lives = 3;
+var allEnemies = [];
 document.getElementById('level').append(score);
-// Enemies our player must avoid
+
 class Enemy {
     // Variables applied to each of our instances go here,
     // we've provided one for you to get started
@@ -17,6 +18,7 @@ class Enemy {
             this.sprite = 'images/enemy-bug.png';
             this.height = 83;
             this.width = 70;
+
         }
         // Update the enemy's position, required method for game
         // Parameter: dt, a time delta between ticks
@@ -29,6 +31,9 @@ class Enemy {
             if (this.x > 500) {
                 this.x = -100;
             }
+
+
+
             if (lives <= 0) {
                 resetGame();
             }
@@ -46,7 +51,7 @@ class Enemy {
 
                 if (life3.className == 'visible') {
                     life3.classList.add(...bounce);
-                    setTimeout(delay, 300)
+                    setTimeout(delay, 400)
 
                     function delay() {
                         life3.classList.remove(...bounce);
@@ -57,30 +62,16 @@ class Enemy {
 
                 } else if (life2.className == 'visible') {
                     life2.classList.add(...bounce);
-                    setTimeout(delay, 300)
+                    setTimeout(delay, 400)
 
                     function delay() {
                         life2.classList.remove(...bounce);
                         life2.classList.remove('visible');
                         life2.classList.add('hidden');
-                        flashHeart();
+
                     }
 
-                    function flashHeart() {
-                        if(lives > 0) {
-                            life1.classList.remove('visible');
-                            life1.classList.add('hidden');
-                            setTimeout(repeat, 500)
 
-                            function repeat() {
-                                life1.classList.remove('hidden');
-                                life1.classList.add('visible');
-
-                                //setTimeout(flashHeart, 500);
-
-                            }
-                        }
-                    }
 
                 }
 
@@ -99,9 +90,13 @@ class Enemy {
 
 
 }
+
+
 // Now write your own player class
 // This class requires an update(), render() and
 // a handleInput() method.
+
+
 class Player {
     constructor(x, y) {
         this.x = x;
@@ -124,6 +119,10 @@ class Player {
             function delay() {
                 document.getElementById('level').classList.remove(...tada);
             }
+
+            enemy.speed += 5;
+            enemy2.speed += 15;
+            enemy3.speed += 35;
 
         }
     }
@@ -150,27 +149,32 @@ class Player {
     }
 
 }
+
 // Now instantiate your objects.
+// Place the player object in a variable called player
+var player = new Player(200, 410);
 // Place all enemy objects in an array called allEnemies
 var enemy = new Enemy(0, 220, 50);
 var enemy2 = new Enemy(0, 140, 20);
 var enemy3 = new Enemy(0, 60, 10);
-var allEnemies = [];
-allEnemies.push(enemy);
-allEnemies.push(enemy2);
-allEnemies.push(enemy3);
-// Place the player object in a variable called player
-var player = new Player(200, 410);
 
+
+
+//Resets game
 function resetGame() {
     console.log("reset game");
+    alert('Game Over! Your score: ' + score);
     score = 0;
     lives = 3;
+    let modal = document.getElementById('myModal');
+    modal.classList.remove('hidden');
+    modal.classList.add('visible');
     document.getElementById('level').innerHTML = score;
     document.getElementById('life3').classList.add('visible');
     document.getElementById('life3').classList.remove('hidden');
     document.getElementById('life2').classList.add('visible');
     document.getElementById('life2').classList.remove('hidden');
+    
 }
 
 // This listens for key presses and sends the keys to your
@@ -178,7 +182,7 @@ function resetGame() {
 //Prevent arrows scrolling screen
 window.addEventListener("keydown", function(e) {
     // space and arrow keys
-    if([32, 37, 38, 39, 40].indexOf(e.keyCode) > -1) {
+    if ([32, 37, 38, 39, 40].indexOf(e.keyCode) > -1) {
         e.preventDefault();
     }
 }, false);
@@ -198,11 +202,22 @@ function chooseChar(img) {
     charName.toString();
     player.changeSprite(charName);
     // Get the modal
-    var modal = document.getElementById('myModal');
-    modal.style.display = "none";
+    let modal = document.getElementById('myModal');
+    modal.classList.add('hidden');
+    //Add init enemies to array
+    enemy.x =0;
+    enemy2.x=0;
+    enemy3.x=0;
+    enemy.speed = 50;
+    enemy2.speed = 20;
+    enemy3.speed = 10;
+    allEnemies.push(enemy);
+    allEnemies.push(enemy2);
+    allEnemies.push(enemy3);
+    //Start random stars
     star.displayStar();
 }
-
+//Controls random star collectibles
 class Star {
     constructor(x, y) {
         this.x = x;
@@ -225,7 +240,10 @@ class Star {
             function delay() {
                 document.getElementById('level').classList.remove(...tada);
             }
-
+            //increase enemy speed
+            enemy.speed += 5;
+            enemy2.speed += 5;
+            enemy3.speed += 15;
         }
 
     }
